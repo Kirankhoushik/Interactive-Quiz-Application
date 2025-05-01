@@ -43,9 +43,7 @@ This quiz application offers:
 
 ## Live Demo
 
-🔗 [View Live App](https://your-username.github.io/your-repo-name/)  
-> Replace with your actual deployment link (e.g., GitHub Pages or Vercel)
-
+🔗 [View Live App](https://interactive-quiz-application-ten.vercel.app/)  
 ---
 
 ## 📦 Installation (Run Locally)
