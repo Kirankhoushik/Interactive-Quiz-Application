@@ -6,7 +6,7 @@ A fully interactive, category-based quiz web app built using **React.js**. This 
 
 ## Description
 
-This quiz application is part of the GDGoC SRM Recruitments 2025 Technical Tasks. It offers:
+This quiz application offers:
 - Multiple quiz categories
 - Explanations for each question after answering
 - Real-time timer and performance tracking
