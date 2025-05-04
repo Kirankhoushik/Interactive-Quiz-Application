@@ -49,7 +49,7 @@ This quiz application offers:
 ## 📦 Installation (Run Locally)
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
-cd YOUR-REPO-NAME
+git clone https://github.com/Kirankhoushik/Interactive-Quiz-Application.git
+cd Interactive-Quiz-Application
 npm install
 npm start
