@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Heart, Clock, Award, RotateCcw, Home } from "lucide-react";
 
 const quizzes = {
   "Indian States and Capitals": [
@@ -52,7 +51,6 @@ const quizzes = {
     { question: "Which country hosted the 2022 FIFA World Cup?", options: ["Russia", "Qatar", "USA", "Germany"], answer: "Qatar" },
   ],
 };
-
 const explanations = {
   "Indian States and Capitals": [
     "Mumbai is the capital of Maharashtra, one of India's most populous states.",
@@ -104,50 +102,6 @@ const explanations = {
   ],
 };
 
-// Category theme colors for visualization
-const categoryThemes = {
-  "Indian States and Capitals": {
-    primary: "#ff9f43",
-    secondary: "#ff6b6b",
-    light: "#fff9f0",
-  },
-  "World Countries and Capitals": {
-    primary: "#54a0ff",
-    secondary: "#2e86de",
-    light: "#f0f8ff",
-  },
-  "Indian Cricket": {
-    primary: "#10ac84",
-    secondary: "#1dd1a1",
-    light: "#f0fff4",
-  },
-  "Football - UCL & FIFA": {
-    primary: "#8854d0",
-    secondary: "#a55eea",
-    light: "#f8f0ff",
-  }
-};
-
-// Confetti component for celebration effect
-const Confetti = ({ count }) => {
-  return (
-    <>
-      {[...Array(count)].map((_, i) => (
-        <div
-          key={i}
-          className="confetti"
-          style={{
-            left: `${Math.random() * 100}%`,
-            backgroundColor: `hsl(${Math.random() * 360}, 70%, 60%)`,
-            animationDuration: `${3 + Math.random() * 4}s`,
-            animationDelay: `${Math.random() * 2}s`,
-          }}
-        ></div>
-      ))}
-    </>
-  );
-};
-
 function App() {
   const [category, setCategory] = useState("");
   const [currentQ, setCurrentQ] = useState(0);
@@ -158,13 +112,6 @@ function App() {
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [timer, setTimer] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(false);
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(false);
-  
-  // Refs for animations
-  const questionCardRef = useRef(null);
 
   useEffect(() => {
     let interval;
@@ -176,19 +123,7 @@ function App() {
     return () => clearInterval(interval);
   }, [category, isFinished, timerRunning]);
 
-  // Add animation effect when question changes
-  useEffect(() => {
-    if (questionCardRef.current && currentQ > 0) {
-      setShowAnimation(true);
-      const timeout = setTimeout(() => {
-        setShowAnimation(false);
-      }, 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentQ]);
-
   const quizData = quizzes[category] || [];
-  const currentTheme = categoryThemes[category] || {};
 
   const handleOptionClick = (option) => {
     if (!isSubmitted) setSelected(option);
@@ -197,10 +132,6 @@ function App() {
   const handleCategorySelect = (cat) => {
     setCategory(cat);
     setTimerRunning(true);
-    // Apply theme colors to document
-    document.documentElement.style.setProperty('--primary-color', categoryThemes[cat].primary);
-    document.documentElement.style.setProperty('--secondary-color', categoryThemes[cat].secondary);
-    document.documentElement.style.setProperty('--light-color', categoryThemes[cat].light);
   };
 
   const handleSubmit = () => {
@@ -208,24 +139,7 @@ function App() {
     setIsSubmitted(true);
     
     const isCorrect = selected === quizData[currentQ].answer;
-    
-    if (isCorrect) {
-      setScore(score + 1);
-      setStreak(streak + 1);
-      
-      // Update best streak
-      if (streak + 1 > bestStreak) {
-        setBestStreak(streak + 1);
-      }
-      
-      // Show confetti for correct answers
-      if (streak + 1 >= 3) {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 3000);
-      }
-    } else {
-      setStreak(0);
-    }
+    if (isCorrect) setScore(score + 1);
     
     const updatedAnswers = [
       ...answeredQuestions,
@@ -248,13 +162,6 @@ function App() {
     } else {
       setIsFinished(true);
       setTimerRunning(false);
-      
-      // Show confetti on quiz completion if score is good
-      const percentage = (score + (selected === quizData[currentQ].answer ? 1 : 0)) / quizData.length * 100;
-      if (percentage >= 70) {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000);
-      }
     }
   };
 
@@ -266,18 +173,8 @@ function App() {
     setIsFinished(false);
     setAnsweredQuestions([]);
     setTimer(0);
-    setStreak(0);
-    setTimerRunning(false);
-    setShowConfetti(false);
-  };
-
-  const handleHome = () => {
     setCategory("");
-    handleRestart();
-    // Reset theme colors
-    document.documentElement.style.removeProperty('--primary-color');
-    document.documentElement.style.removeProperty('--secondary-color');
-    document.documentElement.style.removeProperty('--light-color');
+    setTimerRunning(false);
   };
 
   const formatTime = (seconds) => {
@@ -300,22 +197,16 @@ function App() {
     if (percentage >= 50) return "Good effort! There's room for improvement.";
     return "Keep learning! You'll do better next time.";
   };
-
   if (!category) {
     return (
-      <div className="container welcome-screen">
-        <h1 className="app-title">QuizMaster</h1>
-        <p className="app-subtitle">Test your knowledge in various categories</p>
-        
+      <div className="container">
+        <h1> Choose a Quiz </h1>
         <div className="category-grid">
           {Object.keys(quizzes).map((cat) => (
             <button 
               key={cat} 
               className="category-button" 
               onClick={() => handleCategorySelect(cat)}
-              style={{
-                background: `linear-gradient(135deg, ${categoryThemes[cat].primary}, ${categoryThemes[cat].secondary})`,
-              }}
             >
               <div className="category-name">{cat}</div>
               <div className="questions-count">{quizzes[cat].length} questions</div>
@@ -325,47 +216,26 @@ function App() {
       </div>
     );
   }
-
   if (isFinished) {
     const percentage = (score / quizData.length) * 100;
     
     return (
-      <div className="container" style={{ background: `linear-gradient(to bottom, ${currentTheme.light}, white)` }}>
-        {showConfetti && <Confetti count={100} />}
-        
-        <div className="quiz-header">
-          <h1>{category}</h1>
-          <button className="icon-button home-button" onClick={handleHome}>
-            <Home size={24} />
-          </button>
-        </div>
-        
+      <div className="container">
+        <h1>{category}</h1>
         <div className="result-box">
-          <h2>Quiz Completed!</h2>
+          <h2> Quiz Completed! </h2>
           
           <div className="score-display">
-            <div className="score-circle" style={{ borderColor: currentTheme.primary }}>
+            <div className="score-circle">
               <span className="score-number">{score}</span>
               <span className="score-total">/{quizData.length}</span>
             </div>
-            <div className="score-percentage" style={{ color: currentTheme.primary }}>
-              {percentage.toFixed(0)}%
-            </div>
+            <div className="score-percentage">{percentage.toFixed(0)}%</div>
           </div>
           
           <div className="result-stats">
-            <div className="stat-item">
-              <Clock size={20} />
-              <span><strong>Time:</strong> {formatTime(timer)}</span>
-            </div>
-            <div className="stat-item">
-              <Heart size={20} />
-              <span><strong>Best Streak:</strong> {bestStreak}</span>
-            </div>
-            <div className="stat-item">
-              <Award size={20} />
-              <span><strong>Performance:</strong> {calculatePerformance()}</span>
-            </div>
+            <p><strong>Time taken:</strong> {formatTime(timer)}</p>
+            <p><strong>Performance:</strong> {calculatePerformance()}</p>
           </div>
           
           <h3>Question Summary</h3>
@@ -389,63 +259,27 @@ function App() {
           </div>
           
           <div className="button-group">
-            <button 
-              className="btn" 
-              style={{ backgroundColor: currentTheme.secondary }}
-              onClick={handleRestart}
-            >
-              <RotateCcw size={16} />
-              Try Again
-            </button>
-            <button 
-              className="btn" 
-              style={{ backgroundColor: currentTheme.primary }}
-              onClick={handleHome}
-            >
-              <Home size={16} />
-              Choose Another Quiz
-            </button>
+            <button className="btn blue" onClick={handleRestart}>Try Again</button>
+            <button className="btn green" onClick={() => setCategory("")}>Choose Another Quiz</button>
           </div>
         </div>
       </div>
     );
   }
-
   return (
-    <div className="container" style={{ background: `linear-gradient(to bottom, ${currentTheme.light}, white)` }}>
-      {showConfetti && <Confetti count={50} />}
-      
+    <div className="container">
       <div className="quiz-header">
         <h1>{category}</h1>
         <div className="quiz-meta">
-          <div className="meta-item">
-            <Clock size={18} />
-            <span className="timer">{formatTime(timer)}</span>
-          </div>
-          
-          <div className="meta-item">
-            <Award size={18} />
-            <span className="score-counter">{score}/{currentQ}</span>
-          </div>
-          
-          <div className="meta-item">
-            <Heart size={18} className={streak >= 3 ? "pulse" : ""} />
-            <span className="streak-counter">{streak}</span>
-          </div>
-          
-          <button className="icon-button home-button" onClick={handleHome}>
-            <Home size={20} />
-          </button>
+          <span className="timer"> {formatTime(timer)}</span>
+          <span className="score-counter">Score: {score}/{currentQ}</span>
         </div>
       </div>
       
       <div className="progress-bar">
         <div 
           className="progress-fill" 
-          style={{ 
-            width: `${((currentQ) / quizData.length) * 100}%`,
-            backgroundColor: currentTheme.primary
-          }}
+          style={{ width: `${((currentQ) / quizData.length) * 100}%` }}
         ></div>
       </div>
       
@@ -453,11 +287,7 @@ function App() {
         Question {currentQ + 1} of {quizData.length}
       </div>
       
-      <div 
-        ref={questionCardRef}
-        className={`question-card ${showAnimation ? "animate-change" : ""}`}
-        style={{ borderColor: currentTheme.primary }}
-      >
+      <div className="question-card">
         <h3 className="question">{quizData[currentQ].question}</h3>
         
         <div className="options-box">
@@ -467,10 +297,6 @@ function App() {
               className={`option ${getOptionClass(opt)}`} 
               onClick={() => handleOptionClick(opt)} 
               disabled={isSubmitted}
-              style={{ 
-                borderColor: selected === opt && !isSubmitted ? currentTheme.primary : '',
-                backgroundColor: selected === opt && !isSubmitted ? currentTheme.light : ''
-              }}
             >
               {opt}
             </button>
@@ -492,21 +318,16 @@ function App() {
         <div className="button-group">
           {!isSubmitted ? (
             <button 
-              className="btn submit-btn" 
+              className="btn blue" 
               disabled={selected === null} 
               onClick={handleSubmit}
-              style={{ 
-                backgroundColor: selected !== null ? currentTheme.primary : '#ccc',
-                opacity: selected !== null ? 1 : 0.7
-              }}
             >
               Submit
             </button>
           ) : (
             <button 
-              className="btn next-btn" 
+              className="btn purple" 
               onClick={handleNext}
-              style={{ backgroundColor: currentTheme.secondary }}
             >
               {currentQ === quizData.length - 1 ? "Finish Quiz" : "Next Question"}
             </button>
