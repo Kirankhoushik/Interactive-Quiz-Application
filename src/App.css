@@ -1,4 +1,4 @@
-/* CSS Variables for Theming */
+
 :root {
   --bg-color-light: #f5f7fa;
   --text-color-light: #2d3748;
@@ -30,8 +30,6 @@
   --success-color-purple: #9ae6b4;
   --error-color-purple: #feb2b2;
 }
-
-/* Theme Switching */
 body.light-theme {
   --bg-color: var(--bg-color-light);
   --text-color: var(--text-color-light);
@@ -67,8 +65,6 @@ body.purple-theme {
   --success-color: var(--success-color-purple);
   --error-color: var(--error-color-purple);
 }
-
-/* Global Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -90,8 +86,6 @@ body {
     radial-gradient(circle at 20% 20%, rgba(var(--primary-color), 0.03) 0%, transparent 200px),
     radial-gradient(circle at 80% 80%, rgba(var(--accent-color), 0.03) 0%, transparent 200px);
 }
-
-/* Modern Container with improved Glassmorphism */
 .container {
   width: 100%;
   max-width: 900px;
@@ -167,8 +161,6 @@ h2, h3 {
   font-weight: 600;
   letter-spacing: -0.3px;
 }
-
-/* Enhanced Category Grid */
 .category-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -232,8 +224,6 @@ h2, h3 {
   padding: 5px 12px;
   border-radius: 20px;
 }
-
-/* Stylish Buttons with Gradient */
 .btn {
   padding: 14px 28px;
   border: none;
@@ -400,7 +390,6 @@ h2, h3 {
   border-color: var(--error-color);
 }
 
-/* Quiz Header and Meta Information */
 .quiz-header {
   display: flex;
   flex-direction: column;
