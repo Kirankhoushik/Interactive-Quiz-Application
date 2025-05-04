@@ -1,0 +1,87 @@
+
+/* Global Reset & Fonts */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Quiz Box Styling */
+.quiz-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 60%;
+  text-align: center;
+}
+
+/* Buttons */
+button {
+  background-color: #5c6bc0;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+button:hover {
+  background-color: #3f51b5;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 20px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #66bb6a, #43a047);
+  box-shadow: 0 0 10px #66bb6a;
+  transition: width 0.3s ease-in-out;
+  margin: 1rem 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  .quiz-box {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1rem;
+  }
+}
+
+/* Result Screen Animation */
+.result-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Answer Feedback */
+.correct {
+  background-color: #66bb6a;
+  color: #fff;
+}
+
+.wrong {
+  background-color: #ef5350;
+  color: #fff;
+}
