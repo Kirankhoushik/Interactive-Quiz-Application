@@ -233,7 +233,7 @@ function App() {
   if (!category) {
     return (
       <div className="container">
-        <h1>Quiz Master</h1>
+        <h1>Interactive Quiz Application</h1>
         <div className="category-grid">
           {Object.keys(quizzes).map((cat) => (
             <button 
