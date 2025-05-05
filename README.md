@@ -43,7 +43,7 @@ This quiz application offers:
 
 ## Live Demo
 
-🔗 [View Live App](https://interactive-quiz-application-ten.vercel.app/)  
+🔗 [View Live App](https://interactive-quiz-application-mjdi.vercel.app/)  
 ---
 
 ## 📦 Installation (Run Locally)

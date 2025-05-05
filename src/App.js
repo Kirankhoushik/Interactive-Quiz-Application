@@ -51,6 +51,7 @@ const quizzes = {
     { question: "Which country hosted the 2022 FIFA World Cup?", options: ["Russia", "Qatar", "USA", "Germany"], answer: "Qatar" },
   ],
 };
+
 const explanations = {
   "Indian States and Capitals": [
     "Mumbai is the capital of Maharashtra, one of India's most populous states.",
@@ -186,7 +187,7 @@ function App() {
   const getOptionClass = (option) => {
     if (!isSubmitted) return selected === option ? "selected" : "";
     if (option === quizData[currentQ].answer) return "correct";
-    if (option === selected) return "wrong";
+    if (option === selected && selected !== quizData[currentQ].answer) return "wrong";
     return "";
   };
 
@@ -197,16 +198,49 @@ function App() {
     if (percentage >= 50) return "Good effort! There's room for improvement.";
     return "Keep learning! You'll do better next time.";
   };
+
+  // Generate confetti elements for high scores
+  const renderConfetti = () => {
+    if (score / quizData.length >= 0.8) {
+      const confettiElements = [];
+      const colors = ['#5e72e4', '#825ee4', '#37b24d', '#ff9f43', '#ff6b6b'];
+      
+      for (let i = 0; i < 50; i++) {
+        const left = `${Math.random() * 100}%`;
+        const animationDelay = `${Math.random() * 5}s`;
+        const backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        confettiElements.push(
+          <div 
+            key={i}
+            className="confetti" 
+            style={{
+              left,
+              animationDelay,
+              backgroundColor
+            }}
+          />
+        );
+      }
+      
+      return confettiElements;
+    }
+    
+    return null;
+  };
+
+  // Category Selection Screen
   if (!category) {
     return (
       <div className="container">
-        <h1> Choose a Quiz </h1>
+        <h1>Interactive Quiz Application</h1>
         <div className="category-grid">
           {Object.keys(quizzes).map((cat) => (
             <button 
               key={cat} 
               className="category-button" 
               onClick={() => handleCategorySelect(cat)}
+              data-category={cat}
             >
               <div className="category-name">{cat}</div>
               <div className="questions-count">{quizzes[cat].length} questions</div>
@@ -216,14 +250,17 @@ function App() {
       </div>
     );
   }
+
+  // Results Screen
   if (isFinished) {
     const percentage = (score / quizData.length) * 100;
     
     return (
       <div className="container">
+        {percentage >= 80 && renderConfetti()}
         <h1>{category}</h1>
         <div className="result-box">
-          <h2> Quiz Completed! </h2>
+          <h2>Quiz Completed!</h2>
           
           <div className="score-display">
             <div className="score-circle">
@@ -241,7 +278,7 @@ function App() {
           <h3>Question Summary</h3>
           <div className="question-summary">
             {answeredQuestions.map((item, index) => (
-              <details key={index} className={`summary-item ${item.isCorrect ? "correct-item" : "wrong-item"}`}>
+              <details key={index} className="summary-item">
                 <summary>
                   <span className={`summary-indicator ${item.isCorrect ? "correct-indicator" : "wrong-indicator"}`}>
                     {item.isCorrect ? "✓" : "✗"}
@@ -252,7 +289,7 @@ function App() {
                   <p><strong>Q:</strong> {item.question}</p>
                   <p><strong>Your answer:</strong> {item.selectedAnswer}</p>
                   {!item.isCorrect && <p><strong>Correct answer:</strong> {item.correctAnswer}</p>}
-                  <p className="explanation"><strong>Explanation:</strong> {explanations[category][item.questionIndex]}</p>
+                  <p><strong>Explanation:</strong> {explanations[category][item.questionIndex]}</p>
                 </div>
               </details>
             ))}
@@ -266,12 +303,14 @@ function App() {
       </div>
     );
   }
+
+  // Quiz Screen
   return (
     <div className="container">
       <div className="quiz-header">
         <h1>{category}</h1>
         <div className="quiz-meta">
-          <span className="timer"> {formatTime(timer)}</span>
+          <span className="timer">{formatTime(timer)}</span>
           <span className="score-counter">Score: {score}/{currentQ}</span>
         </div>
       </div>
